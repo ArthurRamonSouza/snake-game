@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define R 20
 #define C 60
 
-int column, row, head, tail, snake_x, snake_y;
+int column, row, head, tail, snake_x, snake_y, game;
+int fixBug = 0; // THe bottom is duplicated without this
 int Field[C][R];
 
 void snakeInitialization() {
@@ -14,6 +16,9 @@ void snakeInitialization() {
   snake_y = R / 2;
   head = 4;
   tail = 1;
+  game = 0;
+  
+  
   // Putting the snake in the field
   for (row = 1; row <= snake_y; row++) {
     for (column = 1; column <= snake_x; column++) {
@@ -64,9 +69,23 @@ void createField() {
   makeTopAndBottom();
 }
 
+void resetScreenPosition(){
+  printf("\033[%d;%dH", 0, 0);
+  // THe bottom is duplicated without this
+  if (fixBug == 0){
+    system("clear");
+    fixBug = 1;
+  }
+}
+
 int main(void) {
   snakeInitialization();
-  createField();
+  
+  while (game == 0){
+    createField();
+    resetScreenPosition();
+  }
+  
   for (row = 1; row <= R; row++) {
     for (column = 1; column <= C; column++) {
       int array = Field[column][row];
